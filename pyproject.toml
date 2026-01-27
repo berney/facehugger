@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=80", "wheel", "setuptools_scm[simple]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "facehugger"
+dynamic = ["version"]
+description = "Download models defined in a facehugger.yaml manifest file"
+authors = [
+    {name = "Berne Campbell", email = "3227426+berney@users.noreply.github.com"},
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = "AGPL-3.0-or-later"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "gguf>=0.17.1",
+    "huggingface_hub>=0.14.0",
+    "pydantic>=2.10.6",
+    "PyYAML>=6.0",
+]
+
+[project.scripts]
+facehugger = "facehugger.facehugger:main"
+
+[project.urls]
+Homepage = "https://github.com/berney/facehugger"
+Repository = "https://github.com/berney/facehugger"
+
+[dependency-groups]
+dev = [
+    "pudb>=2025.1.5",
+    "pytest>=8.3.5",
+    "pytest-cov>=5.0.0",
+    "ty>=0.0.14",
+]
+
+[tool.coverage.run]
+source = ["facehugger"]
+omit = ["*/tests/*", "*/test_*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[tool.setuptools_scm]
+# setuptools_scm configuration

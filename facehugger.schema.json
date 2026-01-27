@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Facehugger Manifest",
+  "description": "Schema for facehugger manifest files",
+  "type": "object",
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo"],
+        "properties": {
+          "repo": {
+            "type": "string",
+            "description": "The Hugging Face repository name (or repo_id)"
+          },
+          "ref": {
+            "type": "string",
+            "description": "The revision (optional, defaults to 'main')"
+          },
+          "include": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "A glob pattern to include"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of glob patterns to include"
+              }
+            ]
+          },
+          "exclude": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "A glob pattern to exclude"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of glob patterns to exclude"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": ["models"],
+  "additionalProperties": true
+}

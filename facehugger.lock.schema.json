@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Facehugger Lock File",
+  "description": "Schema for facehugger.lock file format",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["repo_id", "revision", "refs"],
+    "properties": {
+      "repo_id": {
+        "type": "string",
+        "description": "The Hugging Face repository identifier"
+      },
+      "repo_type": {
+        "type": "string",
+        "description": "The type of repository (e.g., \"model\", \"dataset\", \"space\")",
+        "default": "model"
+      },
+      "revision": {
+        "type": "string",
+        "description": "The revision hash or branch name"
+      },
+      "refs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of references (branches/tags) pointing to this revision"
+      }
+    },
+    "additionalProperties": true
+  }
+}

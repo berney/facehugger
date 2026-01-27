@@ -1,0 +1,74 @@
+[
+  {
+    "repo_id": "Qwen/Qwen-Image",
+    "repo_type": "model",
+    "revision": "75e0b4be04f60ec59a75f475837eced720f823b6",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--Qwen--Qwen-Image/snapshots/75e0b4be04f60ec59a75f475837eced720f823b6",
+    "size_on_disk": 57704594653,
+    "last_accessed": 1768666473.4315884,
+    "last_modified": 1768553738.260807,
+    "refs": [
+      "main"
+    ]
+  },
+  {
+    "repo_id": "Qwen/Qwen-Image-Edit",
+    "repo_type": "model",
+    "revision": "ac7f9318f633fc4b5778c59367c8128225f1e3de",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--Qwen--Qwen-Image-Edit/snapshots/ac7f9318f633fc4b5778c59367c8128225f1e3de",
+    "size_on_disk": 57718794542,
+    "last_accessed": 1768672275.5673766,
+    "last_modified": 1768561809.4281614,
+    "refs": [
+      "main"
+    ]
+  },
+  {
+    "repo_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+    "repo_type": "model",
+    "revision": "b2cff646eb4bb1d68355c01b18ae02e7cf42d120",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--Qwen--Qwen3-Coder-30B-A3B-Instruct/snapshots/b2cff646eb4bb1d68355c01b18ae02e7cf42d120",
+    "size_on_disk": 61079826794,
+    "last_accessed": 1769410712.4085674,
+    "last_modified": 1769410663.8752377,
+    "refs": [
+      "main"
+    ]
+  },
+  {
+    "repo_id": "bartowski/kldzj_gpt-oss-120b-heretic-GGUF",
+    "repo_type": "model",
+    "revision": "406292f67859a86dd34853c75b573aadedf6cbda",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--bartowski--kldzj_gpt-oss-120b-heretic-GGUF/snapshots/406292f67859a86dd34853c75b573aadedf6cbda",
+    "size_on_disk": 128756363392,
+    "last_accessed": 1769409141.7158957,
+    "last_modified": 1769275950.6694553,
+    "refs": [
+      "main"
+    ]
+  },
+  {
+    "repo_id": "lightx2v/Qwen-Image-Lightning",
+    "repo_type": "model",
+    "revision": "e74da8d4e71a54b341de86aa9f8d2509165aa513",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--lightx2v--Qwen-Image-Lightning/snapshots/e74da8d4e71a54b341de86aa9f8d2509165aa513",
+    "size_on_disk": 2548559400,
+    "last_accessed": 1768670177.679605,
+    "last_modified": 1768562006.2125225,
+    "refs": [
+      "main"
+    ]
+  },
+  {
+    "repo_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+    "repo_type": "model",
+    "revision": "7ce945e58ed3f09f9cf9c33a2122d86ac979b457",
+    "snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--unsloth--Qwen3-Coder-30B-A3B-Instruct-GGUF/snapshots/7ce945e58ed3f09f9cf9c33a2122d86ac979b457",
+    "size_on_disk": 32483935392,
+    "last_accessed": 1769418486.3078165,
+    "last_modified": 1769418415.253344,
+    "refs": [
+      "main"
+    ]
+  }
+]

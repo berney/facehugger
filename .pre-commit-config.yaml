@@ -1,0 +1,44 @@
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.14.14
+  hooks:
+    # Run the linter.
+    - id: ruff-check
+    # Run the formatter.
+    - id: ruff-format
+- repo: local
+  hooks:
+    - id: ty-check
+      name: ty check
+      description: "Run 'ty check' for extremely fast Python type checking"
+      entry: uv run ty check
+      language: python
+      types_or: [python, pyi, jupyter]
+      require_serial: true
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.36.1
+  hooks:
+    - id: check-github-workflows
+    - id: check-metaschema
+      name: Validate Facehugger Manifest JSON Schema
+      files: ^facehugger.schema.json$
+    - id: check-metaschema
+      name: Validate Facehugger Lock JSON Schema
+      files: ^facehugger.lock.schema.json$
+    - id: check-jsonschema
+      name: Validate Example Facehugger Manifests
+      args: ["--schemafile", "facehugger.schema.json"]
+      files: |
+        (?x)^(
+          facehugger.yaml|
+          tests/example-files/manifests/.*
+        )$
+    - id: check-jsonschema
+      name: Validate Example Facehugger Lock Files
+      args: ["--schemafile", "facehugger.schema.json"]
+      files: |
+        (?x)^(
+          facehugger.lock|
+          tests/example-files/locks/.*
+        )$

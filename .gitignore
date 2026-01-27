@@ -1,0 +1,7 @@
+/.coverage
+/.ruff_cache/
+/.venv/
+/build/
+/facehugger.egg-info/
+**/__pycache__/
+*.py,cover
