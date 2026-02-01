@@ -8,7 +8,7 @@ ARG GID=1000
 ARG USER=bdawg
 RUN <<-EOF
     set -eux
-    apk add bat fd file jq ripgrep tree vim xh uv
+    apk add bat fd file git jq ripgrep tree vim xh uv
     adduser -D -u $UID -g $GID $USER
 EOF
 USER $USER
@@ -34,6 +34,7 @@ RUN <<-EOF
     type facehugger
     facehugger --version
     facehugger --help
+    facehugger --dry-run
 EOF
 
 # This stage will normall be skipped
@@ -59,18 +60,21 @@ RUN <<-EOF
     type facehugger
     facehugger --version
     facehugger --help
+    facehugger --dry-run
 EOF
 
 FROM base AS image-test
 COPY --link --from=build /home/bdawg/.local/share/uv/tools/facehugger /home/bdawg/.local/share/uv/tools/facehugger
 # No `--link` so symlinks are copied
 COPY --link --from=build /home/bdawg/.local/bin /home/bdawg/.local/bin
+COPY --link facehugger.yaml /facehugger.yaml
 ENTRYPOINT ["facehugger"]
 CMD ["--help"]
 RUN <<-EOF
     set -eux
     facehugger --version
     facehugger --help
+    facehugger --dry-run
 EOF
 
 # final image

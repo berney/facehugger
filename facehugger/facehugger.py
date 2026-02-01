@@ -21,11 +21,11 @@ from pydantic import ValidationError
 
 import argparse
 import logging
+import os
 import subprocess
 import sys
 import difflib
 from pathlib import Path
-from typing import List, Optional, Union
 from importlib.metadata import version, PackageNotFoundError
 
 import yaml
@@ -66,11 +66,27 @@ def load_manifest(file_path: Path) -> FacehuggerManifest:
     return manifest
 
 
+def get_hf_env() -> dict[str, str]:
+    """Get environment with venv's bin directory prepended to PATH.
+
+    This ensures facehugger will use hf from its own venv if available,
+    otherwise fall back to system hf.
+    """
+    venv_bin: Path = Path(sys.executable).parent
+    env: dict[str, str] = os.environ.copy()
+    current_path = env.get("PATH", "")
+    if current_path:
+        env["PATH"] = f"{venv_bin}:{env['PATH']}"
+    else:
+        env["PATH"] = str(venv_bin)
+    return env
+
+
 def build_hf_command(
     repo: str,
-    ref: Optional[str] = None,
-    include: Optional[Union[str, List[str]]] = None,
-    exclude: Optional[Union[str, List[str]]] = None,
+    ref: str | None = None,
+    include: str | list[str] | None = None,
+    exclude: str | list[str] | None = None,
 ) -> str:
     """Construct the equivalent ``hf download`` CLI command.
 
@@ -96,9 +112,9 @@ def build_hf_command(
 
 def download_model(
     repo: str,
-    ref: Optional[str] = None,
-    include: Optional[Union[str, List[str]]] = None,
-    exclude: Optional[Union[str, List[str]]] = None,
+    ref: str | None = None,
+    include: str | list[str] | None = None,
+    exclude: str | list[str] | None = None,
 ) -> None:
     """Download a model using ``huggingface_hub.snapshot_download``.
 
@@ -116,11 +132,15 @@ def download_model(
     print()
 
 
-def get_cache_listing() -> List[str]:
+def get_cache_listing() -> list[str]:
     """Return a list of lines from ``hf cache ls`` output."""
     try:
         result = subprocess.run(
-            ["hf", "cache", "ls"], check=True, text=True, capture_output=True
+            ["hf", "cache", "ls"],
+            check=True,
+            text=True,
+            capture_output=True,
+            env=get_hf_env(),
         )
         return result.stdout.splitlines()
     except subprocess.CalledProcessError as exc:
@@ -129,7 +149,7 @@ def get_cache_listing() -> List[str]:
 
 
 def verify_cache(
-    repo: str, repo_type: Optional[str] = None, ref: Optional[str] = None
+    repo: str, repo_type: str | None = None, ref: str | None = None
 ) -> None:
     """Run ``hf cache verify``; include ``--revision`` if provided."""
 

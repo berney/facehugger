@@ -1,4 +1,4 @@
 /.venv/
-/.git/
+#/.git/
 /facehugger.egg-info/
 /.ruff_cache/
