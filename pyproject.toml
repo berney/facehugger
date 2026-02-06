@@ -10,7 +10,7 @@ authors = [
     {name = "Berne Campbell", email = "3227426+berney@users.noreply.github.com"},
 ]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = "AGPL-3.0-or-later"
 classifiers = [
     "Programming Language :: Python :: 3",
