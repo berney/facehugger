@@ -79,6 +79,8 @@ EOF
 
 # final image
 FROM base
+# XET is buggy for me, results in hangs and corruption
+ENV HF_HUB_DISABLE_XET=1
 COPY --link --from=build /home/bdawg/.local/share/uv/tools/facehugger /home/bdawg/.local/share/uv/tools/facehugger
 # No `--link` so symlinks are copied
 COPY --link --from=build /home/bdawg/.local/bin /home/bdawg/.local/bin
