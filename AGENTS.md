@@ -1,156 +1,135 @@
-# facehugger
+# python312.rule
+# Rule for enforcing modern Python 3.12+ best practices.
+# Applies to all Python files (*.py) in the project.
+#
+# Guidelines covered:
+# - Use match-case syntax instead of if/elif/else for pattern matching.
+# - Use the walrus operator (:=) when it simplifies assignments and tests.
+# - Favor a "never nester" approach by avoiding deep nesting with early returns or guard clauses.
+# - Employ modern type hints using built-in generics (list, dict) and the union pipe (|) operator,
+#   rather than deprecated types from the typing module (e.g., Optional, Union, Dict, List).
+# - Ensure code adheres to strong static typing practices compatible with static analyzers like pyright.
+# - Favor pathlib.Path methods for file system operations over older os.path functions.
+# - Write code in a declarative and minimalist style that clearly expresses its intent.
+# - Additional best practices including f-string formatting, comprehensions, context managers, and overall PEP 8 compliance.
 
-* This is a Python based huggingface repo/file "package" manager.
-* Akin to the `uv` tool for python dependencies, but with `facehugger.yaml` instead of `pyproject.toml` and `facehugger.lock` instead of `uv.lock`.
+description: "Modern Python 3.12+ best practices and style guidelines for coding."
+files: "**/*.py"
 
-## Package Management (python dependencies)
-* This module is designed to be used with the `uv` package manager.
-* DO NOT USE `pip`.
-* For example use `uv list` to list packages rather than `pip list`.
-* To add or remove dependencies use `uv add foo` and `uv remove foo` rather than editing `pyproject.toml` directly.
+guidelines:
+  - title: "Match-Case Syntax"
+    description: >
+      Prefer using the match-case construct over traditional if/elif/else chains when pattern matching
+      is applicable. This leads to clearer, more concise, and more maintainable code.
 
+  - title: "Walrus Operator"
+    description: >
+      Utilize the walrus operator (:=) to streamline code where assignment and conditional testing can be combined.
+      Use it judiciously when it improves readability and reduces redundancy.
 
-## Installation
+  - title: "Never Nester"
+    description: >
+      Aim to keep code flat by avoiding deep nesting. Use early returns, guard clauses, and refactoring to
+      minimize nested structures, making your code more readable and maintainable.
 
-To install this package using `uv`, run:
+  - title: "Modern Type Hints"
+    description: >
+      Adopt modern type hinting by using built-in generics like list and dict, along with the pipe (|) operator
+      for union types (e.g., int | None). Avoid older, deprecated constructs such as Optional, Union, Dict, and List
+      from the typing module.
 
-```bash
-uv pip install .
-```
+  - title: "Strong Static Typing"
+    description: >
+      Write code with explicit and robust type annotations that are fully compatible with static type checkers
+      like pyright. This ensures higher code reliability and easier maintenance.
 
-This will install the package in development mode, allowing you to run the `facehugger` command directly from the local directory.
+  - title: "Pydantic-First Parsing"
+    description: >
+      Prefer Pydantic v2's native validation over ad-hoc parsing. Use `model_validate`,
+      `field_validator`, `from_attributes`, and field aliases to coerce external SDK/DTO objects.
+      Avoid manual `getattr`/`hasattr` flows and custom constructors like `from_sdk` unless they are
+      thin wrappers over `model_validate`. Keep normalization logic inside model validators so call sites
+      remain declarative and typed.
 
+  - title: "Pathlib for File Operations"
+    description: >
+      Favor the use of pathlib.Path methods for file system operations. This approach offers a more
+      readable, object-oriented way to handle file paths and enhances cross-platform compatibility,
+      reducing reliance on legacy os.path functions.
 
-## Usage
+  - title: "Declarative and Minimalist Code"
+    description: >
+      Write code that is declarative—clearly expressing its intentions rather than focusing on implementation details.
+      Strive to keep your code minimalist by removing unnecessary complexity and boilerplate. This approach improves
+      readability, maintainability, and aligns with modern Python practices.
 
-Once installed, you can use the `facehugger` command to download models defined in a `facehugger.yaml` manifest file:
+  - title: "Additional Best Practices"
+    description: >
+      Embrace other modern Python idioms such as:
+      - Using f-strings for string formatting.
+      - Favoring comprehensions for building lists and dictionaries.
+      - Employing context managers (with statements) for resource management.
+      - Following PEP 8 guidelines to maintain overall code style consistency.
 
-```bash
-facehugger
-```
+  - title: "Exception Documentation"
+    description: >
+      Document exceptions accurately and minimally in docstrings:
+      - Only document exceptions that are explicitly raised in the function implementation
+      - Remove Raises entries for exceptions that are not directly raised
+      - Include all possible exceptions from explicit raise statements
+      - For public APIs, document exceptions from called functions if they are allowed to propagate
+      - Avoid documenting built-in exceptions that are obvious (like TypeError from type hints)
+      This ensures documentation stays accurate and maintainable, avoiding the common pitfall
+      of listing every possible exception that could theoretically occur.
 
-This will download the models specified in the `facehugger.yaml` file in the current directory.
+  - title: "Modern Enum Usage"
+    description: >
+      Leverage Python's enum module effectively following modern practices:
+      - Use StrEnum for string-based enums that need string comparison
+      - Use IntEnum/IntFlag for performance-critical integer-based enums
+      - Use auto() for automatic value assignment to maintain clean code
+      - Always use UPPERCASE for enum members to avoid name clashes
+      - Add methods to enums when behavior needs to be associated with values
+      - Use @property for computed attributes rather than storing values
+      - For type mixing, ensure mix-in types appear before Enum in base class sequence
+      - Consider Flag/IntFlag for bit field operations
+      - Use _generate_next_value_ for custom value generation
+      - Implement __bool__ when enum boolean evaluation should depend on value
+      This promotes type-safe constants, self-documenting code, and maintainable value sets.
 
-If you want to use a different manifest file, you can specify it as an argument:
+  - title: "No Inline Ignores"
+    description: >
+      Do not use inline suppressions like `# type: ignore[...]` or `# noqa[...]` in production code.
+      Instead, fix types and lint warnings at the source by:
+      - Refining signatures with generics (TypeVar), Protocols, or precise return types
+      - Guarding with `isinstance` checks before attribute access
+      - Using `typing.cast` when control flow guarantees the type
+      - Extracting small helpers to create clearer, typed boundaries
+      If a suppression is truly unavoidable at an external boundary, prefer a narrow, well-typed wrapper
+      over in-line ignores, and document the rationale in code comments.
 
-```bash
-facehugger path/to/your/manifest.yaml
-```
+  - title: "Pydantic Discriminated Unions"
+    description: >
+      When modeling variants with a discriminated union (e.g., on a `transport` field), do not narrow a
+      field type in a subclass (e.g., overriding `transport: Literal['http']` with `Literal['streamable-http']`).
+      This violates Liskov substitution and triggers type checker errors due to invariance of class attributes.
+      Prefer sibling classes plus a shared mixin for common fields and helpers, and compose the union with
+      `Annotated[Union[...], Field(discriminator='transport')]`.
+      Example pattern:
+      - Create a base with shared non-discriminator fields (e.g., `_MCPBase`).
+      - Create a mixin with protocol-specific fields/methods (e.g., `_MCPHttpFields`), without a `transport`.
+      - Define sibling final classes per variant (e.g., `MCPHttp`, `MCPStreamableHttp`, `MCPStdio`) that set
+        `transport: Literal[...]` once in each final class.
+      - Use `match` on the discriminator to narrow types at call sites.
 
-For a dry run (to see what commands would be executed without actually downloading), use:
-
-```bash
-facehugger --dry-run
-```
-
-To see the version of the package, use:
-
-```bash
-facehugger --version
-```
-
-To see the help message, use:
-
-```bash
-facehugger --help
-```
-
-
-## Manifest File Format
-
-The manifest file (default: `facehugger.yaml`) defines the models to be downloaded.
-The format is YAML and supports the following fields:
-
-- `repo`: The Hugging Face repository name (or `repo_id`) (required)
-- `ref`: The revision (optional, defaults to `main`)
-- `include`: A glob pattern or list of patterns to include (optional)
-- `exclude`: A glob pattern or list of patterns to exclude (optional)
-
-Example:
-
-```yaml
-models:
-  - repo: owner/model-repo
-    ref: main
-    include: "*.gguf"
-    exclude: "*.ckpt"
-```
-
-This mirrors the options of the `hf download` CLI (except `ref` instead of `revision`).
-
-
-## Lock File Format
-
-The purpose of the lock file is to enable exact reproduction of model revisions when the `--frozen` argument is given.
-
-The lock file format is the compatible with the the JSON output of the `hf cache ls --revisions --format json` command.
-Thus a lock file can be produced by `hf cache ls --revisions --format json > facehugger.lock`.
-
-Only the `repo_id`, `revision`, and `refs` fields are used.
-The `snapshot_path`, `size_on_disk`, `last_accessed`, and `last_modified` keys are ignored.
-Any other extra keys are also ignored.
-
-Example `facehugger.lock` file:
-
-```json
-[
-  {
-    "repo_id": "Qwen/Qwen-Image",
-    "repo_type": "model",
-    "revision": "75e0b4be04f60ec59a75f475837eced720f823b6",
-    #"snapshot_path": "/var/home/bdawg/.cache/huggingface/hub/models--Qwen--Qwen-Image/snapshots/75e0b4be04f60ec59a75f475837eced720f823b6",
-    #"size_on_disk": 57704594653,
-    #"last_accessed": 1768666473.4315884,
-    #"last_modified": 1768553738.260807,
-    "refs": [
-      "main"
-    ]
-  }
-]
-```
-
-
-## Source Code Formatting
-* `ruff format` is used for formatting.
-* If you add or change code, try to conform to ruff style.
-* You can run `ruff format --exit-non-zero-on-format` to check the formatting.
-
-
-## Source Code Linting
-* `ruff check` is used for linting.
-* If you add or change code, try to pass all linting checks.
-* You can run `ruff check` to perform linting.
-
-
-## Source Code Type Checking
-* Astral `ty` is used for type checking.
-* If you add or chagne code, you shouldn't introduce type check errors.
-* You can run `uv run ty check --error-on-warning` to perform type checking.
-
-
-## Testing
-* `pytest` (a dev dependency) is used for the testing framework.
-* When adding tests, don't use `subprocess` to call `facehugger`, just use imports and test that way.
-* If you make code changes, run the `pytest` to ensure the tests all pass.
-  You could run `pytest` before you make changes to ensure they are in a good state to begin with.
-* You should run `pytest --cov tests/` to check how much code coverage your tests have.
-  You should aim for 100% coverage.
-
-
-## Containerisation
-* There's a `Dockerfile` with multiple stages.
-* Some stages would be skipped by default, but can be explicitly targetted, such as `check` and `image-test`.
-* These `check` and `image-test` stages are to containerise source code formatting, linting, and type checking checks, and test the produced image is functional.
-* You can run these with `docker build -t berne/facehugger --target $TARGET .`, where `$TARGET` is `check` or `image-test` etc.
-
-
-## Agent Instructions
-* Do NOT do git write actions like `git commit`, `git reset`, `git add`, `git rm` etc., unless given explicit instructions to do so.
-* Git read actions like `git log`, `git ls-files`, etc. are OK.
-* Before you go running `cd <some-directory>`, you are probably already in it. There's no point `cd`'ing into the current directory you are already in.
-  For example is you are in `/some/directory` (as seen by `pwd`), do NOT run `cd /some/directory && python -m pytest tests/ -v` - as you are already in that directory.
-* DO NOT RUN `cd /var/home/bdawg/co/berney/facehugger && ...`. Run `pwd` and you will see the current working directory is `/var/home/bdawg/co/berney/facehugger`.
-  Running `cd /var/home/bdawg/co/berney/facehugger` will do nothing useful as you are already in that directory.
-  Running `cd /var/home/bdawg/co/berney/facehugger && ...` is the same as just running `...`, so just run `...` without the `cd blah && ...`.
-* DO NOT RUN `python -m pytest ...` - just run `pytest ...`.
-* DO NOT RUN `pytest tests/` just run `pytest` - it will already run the tests in the `test/` directory.
+  - title: "Use uv for All Commands"
+    description: >
+      We use uv to manage our python environment. You should nevery try to run a bare python commands.
+      Always run commands using `uv` instead of invoking `python` or `pip` directly.
+      For example, use `uv add package` and `uv run script.py` rather than `pip install package` or `python script.py`.
+      This practice helps avoid environment drift and leverages modern Python packaging best practices.
+      Useful uv commands are:
+      - uv add/remove <package> to manage dependencies
+      - uv sync to install dependencies declared in pyproject.toml and uv.lock
+      - uv run script.py to run a script within the uv environment
+      - uv run pytest (or any other python tool) to run the tool within the uv environment

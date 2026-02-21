@@ -94,7 +94,7 @@ def build_hf_command(
     """
     parts = ["hf", "download", repo]
     if ref:
-        parts[-1] = f"{repo}@{ref}"
+        parts.extend(["--revision", ref])
     if include:
         if isinstance(include, list):
             for pat in include:
