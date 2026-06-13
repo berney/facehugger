@@ -136,7 +136,7 @@ def get_cache_listing() -> list[str]:
     """Return a list of lines from ``hf cache ls`` output."""
     try:
         result = subprocess.run(
-            ["hf", "cache", "ls"],
+            ["hf", "cache", "ls", "--revisions"],
             check=True,
             text=True,
             capture_output=True,
