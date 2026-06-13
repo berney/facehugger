@@ -214,6 +214,11 @@ def main() -> None:
         help="Print the hf download commands without performing the download",
     )
     parser.add_argument(
+        "--full-verify",
+        action="store_true",
+        help="Verify checksums for all repos, even if already fully cached.",
+    )
+    parser.add_argument(
         "--version",
         action="store_true",
         help="Print the package version and exit",
@@ -261,9 +266,18 @@ def main() -> None:
             logging.info(f"Equivalent command: `{cmd_str}`")
 
             if not args.dry_run:
+                # Capture cache state before download to detect new files
+                pre_cache = set(get_cache_listing())
                 download_model(repo=repo, ref=ref, include=include, exclude=exclude)
-                # Verify cache after each download, passing ref if present
-                verify_cache(repo, ref=ref)
+                if args.full_verify:
+                    # Verify all repos as before
+                    verify_cache(repo, ref=ref)
+                else:
+                    # Only verify if new files appeared for this repo
+                    post_cache = set(get_cache_listing())
+                    new_lines = post_cache - pre_cache
+                    if any(repo in line for line in new_lines):
+                        verify_cache(repo, ref=ref)
 
     # After all downloads (or dry‑run) show final cache state and diff
     final_cache = get_cache_listing()
