@@ -33,7 +33,7 @@ Repository = "https://github.com/berney/facehugger"
 [dependency-groups]
 dev = [
     "pudb>=2025.1.5",
-    "pytest>=8.3.5",
+    "pytest>=9.0.3",
     "pytest-cov>=5.0.0",
     "ty>=0.0.14",
 ]
